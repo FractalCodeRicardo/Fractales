@@ -20,16 +20,10 @@ var indexCube=0;
 		container = document.createElement( 'div' );
 		document.body.appendChild( container );
 
-
 		camera=createCamera();
-
-
 		scene = new THREE.Scene();
 	
-
 		createLights();
-
-
 
 		renderer = new THREE.WebGLRenderer( { antialias: true } );
 		renderer.setPixelRatio( window.devicePixelRatio );
@@ -44,9 +38,7 @@ var indexCube=0;
 	}
 
 	function createLights(){
-
-
-		
+	
 		scene.add( new THREE.AmbientLight( 0x404040 ) );
 		var light1= new THREE.DirectionalLight( 0xeacd76 );
 		light1.position.set( 0, 0, 0 );
@@ -163,9 +155,6 @@ var indexCube=0;
 	}
 
 
-
-
-
 	function nextPoint(centerPosition, vertexPosition){
 		var unit=unitVector(vertexPosition);
 		var magnitude=calculateModule(vertexPosition);
@@ -275,9 +264,6 @@ var indexCube=0;
 
 		return vertices;
 	}
-
-
-
 
 
 })();
