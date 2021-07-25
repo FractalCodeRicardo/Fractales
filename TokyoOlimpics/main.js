@@ -4,7 +4,7 @@ class Simulation {
     constructor() {
         this.drones = [];
         this.time = 1;
-        this.droneNumber = 10;
+        this.droneNumber = 1000;
         this.spherePoints = []
         this.vel = 1;
 
@@ -13,12 +13,11 @@ class Simulation {
     }
 
     iterate() {
-        let newDrones = []
-        for(const key in this.drones) {
-            const drone = this.drones[key];
-            const p = this.getNewPoint(drone.position);
-            newDrones.push(this.createDrone(p))
-        }
+        let me = this;
+        this.drones.forEach(d => {
+            let newPosition = me.getNewPoint(d.position);
+            d.position = newPosition;
+        })
     }
 
     createSpherePoints() {
@@ -45,16 +44,18 @@ class Simulation {
         }
     }
 
+
     createDrones() {
         for (let i = 0; i < this.droneNumber; i++) {
             let p = this.getRandomPosition();
-            let d = this.createDrone(p);
+            let d = this.createDrone(i.toString(), p);
             this.drones.push(d);
         }
     }
 
-    createDrone(position) {
+    createDrone(id, position) {
         return  {
+            id: id,
             position: position
         }
     }
@@ -71,15 +72,21 @@ class Simulation {
         return Math.floor(Math.random() * 500);
     }
 
-    getNewPoint(p) {
-        let cPoint = this.getClosestSpherePoint(p);
-        let nVector = this.unitVector(cPoint);
-        let newPoint = sum(p, nVector);
+    getNewPoint(p1) {
+        let p2 = this.getClosestSpherePoint(p1);
+        let p3 = this.subs(p2, p1)
+        let nVector = this.unitVector(p3);
+        let newPoint = this.sum(p1, nVector);
         return newPoint;
     }
 
     unitVector(v) {
-        let m = module(v);
+        let m = this.module(v);
+
+        if (m <= 0) {
+            return {x:0, y:0, z:0}
+        }
+
         return {
             x: v.x / m,
             y: v.y / m,
@@ -95,16 +102,24 @@ class Simulation {
         }
     }
 
+    subs(p1, p2) {
+        return  {
+            x: p1.x - p2.x,
+            y: p1.y - p2.y,
+            z: p1.z - p2.z,
+        }
+    }
+
     module(v) {
-        let x2 = Math.pow(v.x);
-        let y2 = Math.pow(v.y);
-        let z2 = Math.pow(v.z);
+        let x2 = Math.pow(v.x, 2);
+        let y2 = Math.pow(v.y, 2);
+        let z2 = Math.pow(v.z, 2);
         return Math.sqrt(x2 + y2 + z2);
     }
 
     getClosestSpherePoint(point) {
         let minDistance = 10000000;
-        let point = null;
+        let closestPoint = null;
 
         for (let i = 0; i < this.spherePoints.length; i++) {
             let spherePoint = this.spherePoints[i];
@@ -112,11 +127,11 @@ class Simulation {
 
             if (distance < minDistance) {
                 minDistance = distance;
-                point = spherePoint;
+                closestPoint = spherePoint;
             }
         }
 
-        return point;
+        return closestPoint;
     }
 
     getDistance(p1, p2) {
@@ -153,9 +168,33 @@ function addDrones() {
 
     for (const key in drones) {
         let drone = drones[key];
-        let cube = createCube(drone.position, 5);
+        let cube = createCube(drone.id, drone.position, 5);
         scene.add(cube);
     }
+}
+
+function dronesToObject(drones) {
+    let obj = {};
+    drones.forEach(i => {
+        obj[i.id] = i;
+    })
+    return obj;
+}
+
+function updateDrones() {
+    let objDrones = dronesToObject(simulation.drones)
+
+    scene.children.forEach(c => {
+        if (!(c instanceof THREE.Mesh)) return;
+        if (!objDrones.hasOwnProperty(c.name)) return;
+
+        let drone = objDrones[c.name];
+
+        c.position.x = drone.position.x;
+        c.position.y = drone.position.y;
+        c.position.z = drone.position.z;
+
+    })
 }
 
 function createCamera() {
@@ -173,12 +212,13 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-function createCube(position, width) {
-    var mesh = new THREE.MeshPhongMaterial({ color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading });
+function createCube(id, position, width) {
+    var mesh = new THREE.MeshPhongMaterial({color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading });
     var hls = mesh.color.getHSL();
     mesh.color.setHSL(hls.h, hls.s, 1);
 
     var cube = new THREE.Mesh(new THREE.BoxGeometry(width, width, width), mesh);
+    cube.name = id;
     cube.position.y = position.y;
     cube.position.x = position.x;
     cube.position.z = position.z;
@@ -187,6 +227,8 @@ function createCube(position, width) {
 }
 
 function render() {
+    simulation.iterate();
+    updateDrones();
     renderer.render(scene, camera);
 }
 
