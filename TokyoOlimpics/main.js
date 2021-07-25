@@ -4,27 +4,36 @@ class Simulation {
     constructor() {
         this.drones = [];
         this.time = 1;
-        this.droneNumber = 1000;
+        this.droneNumber = 2000;
         this.spherePoints = []
         this.vel = 1;
+        this.enoughClose = 2;
+        this.dronesInPlace = [];
 
         this.createSpherePoints();
+        //this.createSpherePointsTest();
         this.createDrones();
     }
 
     iterate() {
         let me = this;
+        
         this.drones.forEach(d => {
-            let newPosition = me.getNewPoint(d.position);
-            d.position = newPosition;
+            if (!this.isDroneInPlace(d)) {
+                me.moveDrone(d);
+            }
         })
+    }
+
+    createSpherePointsTest() {
+        this.spherePoints.push({x:0, y:0, z:0});
     }
 
     createSpherePoints() {
         let theta = 0;
         let phi = 0;
-        let step = 0.3;
-        let r = 255;
+        let step = 0.1;
+        let r = 150;
 
         while (theta <= Math.PI) {
 
@@ -37,13 +46,26 @@ class Simulation {
                     z: r * Math.cos(theta)
                 }
 
-                this.spherePoints.push(p);
+                if (!this.containsPoint(this.spherePoints, p)) {
+                    this.spherePoints.push(p);
+                }
+
                 phi += step;
             }
             theta += step;
         }
     }
 
+    containsPoint(points, point) {
+        for (let i = 0; i < points.length; i++) {
+            const p = points[i];
+            
+            if (this.equals(p, point)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     createDrones() {
         for (let i = 0; i < this.droneNumber; i++) {
@@ -61,26 +83,50 @@ class Simulation {
     }
 
     getRandomPosition() {
+        let i = Math.floor(this.spherePoints.length * Math.random());
+        let p = this.spherePoints[i];
         return {
-            x: this.getRandom(),
-            y: this.getRandom(),
-            z: this.getRandom()
+            x: p.x + this.getRandom(),
+            y: p.y + this.getRandom(),
+            z: p.z + this.getRandom()
         }
     }
 
+    getRandomSign() {
+        return Math.random > 0.5 ? 1 : -1;
+    }
+
     getRandom() {
-        return Math.floor(Math.random() * 500);
+        return Math.floor(Math.random() * 300) * this.getRandomSign();
     }
 
-    getNewPoint(p1) {
-        let p2 = this.getClosestSpherePoint(p1);
-        let p3 = this.subs(p2, p1)
-        let nVector = this.unitVector(p3);
+    moveDrone(drone) {
+        let p1 = drone.position;
+        let pointData = this.getClosestSpherePoint(p1);
+        let p3 = this.subs(pointData.closestPoint, p1)
+        let nVector = this.unit(p3);
+        nVector = this.prod(nVector, this.vel);
         let newPoint = this.sum(p1, nVector);
-        return newPoint;
+        
+        drone.position = newPoint;
+
+        if (this.isEnoughClose(newPoint, pointData.closestPoint)) {
+            this.spherePoints.splice(pointData.index, 1);
+            this.dronesInPlace.push(drone.id);
+        }
     }
 
-    unitVector(v) {
+    isDroneInPlace(drone) {
+        return this.dronesInPlace.indexOf(drone.id) > -1;
+    }
+
+    equals(p1, p2) {
+        return p1.x == p2.x &&
+        p1.y == p2.y &&
+        p1.z == p2.z;
+    }
+
+    unit(v) {
         let m = this.module(v);
 
         if (m <= 0) {
@@ -98,7 +144,7 @@ class Simulation {
         return  {
             x: p1.x + p2.x,
             y: p1.y + p2.y,
-            z: p1.z + p2.z,
+            z: p1.z + p2.z
         }
     }
 
@@ -106,7 +152,15 @@ class Simulation {
         return  {
             x: p1.x - p2.x,
             y: p1.y - p2.y,
-            z: p1.z - p2.z,
+            z: p1.z - p2.z
+        }
+    }
+
+    prod(p1, scalar) {
+        return  {
+            x: p1.x * scalar,
+            y: p1.y * scalar,
+            z: p1.z * scalar
         }
     }
 
@@ -120,6 +174,7 @@ class Simulation {
     getClosestSpherePoint(point) {
         let minDistance = 10000000;
         let closestPoint = null;
+        let index = -1;
 
         for (let i = 0; i < this.spherePoints.length; i++) {
             let spherePoint = this.spherePoints[i];
@@ -128,10 +183,14 @@ class Simulation {
             if (distance < minDistance) {
                 minDistance = distance;
                 closestPoint = spherePoint;
+                index = i;
             }
         }
 
-        return closestPoint;
+        return {
+            index: index,
+            closestPoint: closestPoint
+        }
     }
 
     getDistance(p1, p2) {
@@ -141,12 +200,19 @@ class Simulation {
 
         return Math.sqrt(dx + dy +dz);
     }
+
+    isEnoughClose(p1, p2) {
+        let t = this.subs(p1, p2);
+        let m = this.module(t);
+
+        return m < this.enoughClose;
+    }
 }
 
 
 let camera, scene;
 let simulation = new Simulation();
-
+let angle = 0, radius = 800;
 init();
 animate();
 
@@ -198,7 +264,7 @@ function updateDrones() {
 }
 
 function createCamera() {
-    var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
+    var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1500);
     camera.position.y = 500;//position.y;
     camera.position.z = 500;//position.z;
     camera.position.x = 500;//position.x;
@@ -210,6 +276,11 @@ function createCamera() {
 function animate() {
     render();
     requestAnimationFrame(animate);
+
+    camera.position.x = radius * Math.cos( angle );  
+    camera.position.y = radius * Math.sin( angle );
+    camera.lookAt(new THREE.Vector3(0, 0, 0))
+    angle += 0.01;
 }
 
 function createCube(id, position, width) {
@@ -239,11 +310,11 @@ function createLights() {
     scene.add(light1);
 
     var light2 = new THREE.DirectionalLight(0x1fc746);
-    light2.position.set(0, 0, -400);
+    light2.position.set(0, 0, -1000);
     scene.add(light2);
 
     var light3 = new THREE.DirectionalLight(0x1f22c7);
-    light3.position.set(0, 0, 400);
+    light3.position.set(0, 0, 1000);
     scene.add(light3);
 
 }
