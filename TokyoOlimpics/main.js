@@ -5,13 +5,13 @@ class Simulation {
         this.drones = [];
         this.time = 1;
         this.droneNumber = 2000;
-        this.spherePoints = []
+        this.points = []
         this.vel = 1;
         this.enoughClose = 2;
         this.dronesInPlace = [];
 
-        this.createSpherePoints();
-        //this.createSpherePointsTest();
+        this.createPoints();
+        //this.createPointsTest();
         this.createDrones();
     }
 
@@ -25,47 +25,15 @@ class Simulation {
         })
     }
 
-    createSpherePointsTest() {
-        this.spherePoints.push({x:0, y:0, z:0});
+    createPointsTest() {
+        this.points.push({x:0, y:0, z:0});
     }
 
-    createSpherePoints() {
-        let theta = 0;
-        let phi = 0;
-        let step = 0.1;
-        let r = 150;
-
-        while (theta <= Math.PI) {
-
-            phi = 0;
-            while (phi <= Math.PI * 2) {
-
-                let p = {
-                    x: r * Math.sin(theta) * Math.cos(phi),
-                    y: r * Math.sin(theta) * Math.sin(phi),
-                    z: r * Math.cos(theta)
-                }
-
-                if (!this.containsPoint(this.spherePoints, p)) {
-                    this.spherePoints.push(p);
-                }
-
-                phi += step;
-            }
-            theta += step;
-        }
+    createPoints() {
+        let points = new Points();
+        this.points = points.getPoints();
     }
 
-    containsPoint(points, point) {
-        for (let i = 0; i < points.length; i++) {
-            const p = points[i];
-            
-            if (this.equals(p, point)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     createDrones() {
         for (let i = 0; i < this.droneNumber; i++) {
@@ -83,8 +51,8 @@ class Simulation {
     }
 
     getRandomPosition() {
-        let i = Math.floor(this.spherePoints.length * Math.random());
-        let p = this.spherePoints[i];
+        let i = Math.floor(this.points.length * Math.random());
+        let p = this.points[i];
         return {
             x: p.x + this.getRandom(),
             y: p.y + this.getRandom(),
@@ -102,7 +70,7 @@ class Simulation {
 
     moveDrone(drone) {
         let p1 = drone.position;
-        let pointData = this.getClosestSpherePoint(p1);
+        let pointData = this.getClosestPoint(p1);
         let p3 = this.subs(pointData.closestPoint, p1)
         let nVector = this.unit(p3);
         nVector = this.prod(nVector, this.vel);
@@ -111,19 +79,13 @@ class Simulation {
         drone.position = newPoint;
 
         if (this.isEnoughClose(newPoint, pointData.closestPoint)) {
-            this.spherePoints.splice(pointData.index, 1);
+            this.points.splice(pointData.index, 1);
             this.dronesInPlace.push(drone.id);
         }
     }
 
     isDroneInPlace(drone) {
         return this.dronesInPlace.indexOf(drone.id) > -1;
-    }
-
-    equals(p1, p2) {
-        return p1.x == p2.x &&
-        p1.y == p2.y &&
-        p1.z == p2.z;
     }
 
     unit(v) {
@@ -171,18 +133,18 @@ class Simulation {
         return Math.sqrt(x2 + y2 + z2);
     }
 
-    getClosestSpherePoint(point) {
+    getClosestPoint(point) {
         let minDistance = 10000000;
         let closestPoint = null;
         let index = -1;
 
-        for (let i = 0; i < this.spherePoints.length; i++) {
-            let spherePoint = this.spherePoints[i];
-            let distance = this.getDistance(point, spherePoint);
+        for (let i = 0; i < this.points.length; i++) {
+            let pointToReach = this.points[i];
+            let distance = this.getDistance(point, pointToReach);
 
             if (distance < minDistance) {
                 minDistance = distance;
-                closestPoint = spherePoint;
+                closestPoint = pointToReach;
                 index = i;
             }
         }
