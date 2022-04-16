@@ -1,4 +1,4 @@
-(function() {
+(function () {
 
 	var container, stats;
 	var camera, scene, renderer;

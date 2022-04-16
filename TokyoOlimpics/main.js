@@ -17,7 +17,7 @@ class Simulation {
 
     iterate() {
         let me = this;
-        
+
         this.drones.forEach(d => {
             if (!this.isDroneInPlace(d)) {
                 me.moveDrone(d);
@@ -26,7 +26,7 @@ class Simulation {
     }
 
     createPointsTest() {
-        this.points.push({x:0, y:0, z:0});
+        this.points.push({ x: 0, y: 0, z: 0 });
     }
 
     createPoints() {
@@ -44,7 +44,7 @@ class Simulation {
     }
 
     createDrone(id, position) {
-        return  {
+        return {
             id: id,
             position: position
         }
@@ -75,7 +75,7 @@ class Simulation {
         let nVector = this.unit(p3);
         nVector = this.prod(nVector, this.vel);
         let newPoint = this.sum(p1, nVector);
-        
+
         drone.position = newPoint;
 
         if (this.isEnoughClose(newPoint, pointData.closestPoint)) {
@@ -92,7 +92,7 @@ class Simulation {
         let m = this.module(v);
 
         if (m <= 0) {
-            return {x:0, y:0, z:0}
+            return { x: 0, y: 0, z: 0 }
         }
 
         return {
@@ -103,7 +103,7 @@ class Simulation {
     }
 
     sum(p1, p2) {
-        return  {
+        return {
             x: p1.x + p2.x,
             y: p1.y + p2.y,
             z: p1.z + p2.z
@@ -111,7 +111,7 @@ class Simulation {
     }
 
     subs(p1, p2) {
-        return  {
+        return {
             x: p1.x - p2.x,
             y: p1.y - p2.y,
             z: p1.z - p2.z
@@ -119,7 +119,7 @@ class Simulation {
     }
 
     prod(p1, scalar) {
-        return  {
+        return {
             x: p1.x * scalar,
             y: p1.y * scalar,
             z: p1.z * scalar
@@ -160,7 +160,7 @@ class Simulation {
         let dy = Math.pow(p2.y - p1.y, 2);
         let dz = Math.pow(p2.z - p1.z, 2);
 
-        return Math.sqrt(dx + dy +dz);
+        return Math.sqrt(dx + dy + dz);
     }
 
     isEnoughClose(p1, p2) {
@@ -182,7 +182,7 @@ function init() {
     camera = createCamera();
     scene = new THREE.Scene();
     createLights();
-    
+
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -230,7 +230,7 @@ function createCamera() {
     camera.position.y = 500;//position.y;
     camera.position.z = 500;//position.z;
     camera.position.x = 500;//position.x;
-    
+
     camera.lookAt(new THREE.Vector3(0, 0, 0))
     return camera;
 }
@@ -239,14 +239,14 @@ function animate() {
     render();
     requestAnimationFrame(animate);
 
-    camera.position.x = radius * Math.cos( angle );  
-    camera.position.y = radius * Math.sin( angle );
+    camera.position.x = radius * Math.cos(angle);
+    camera.position.y = radius * Math.sin(angle);
     camera.lookAt(new THREE.Vector3(0, 0, 0))
     angle += 0.01;
 }
 
 function createCube(id, position, width) {
-    var mesh = new THREE.MeshPhongMaterial({color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading });
+    var mesh = new THREE.MeshPhongMaterial({ color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading });
     var hls = mesh.color.getHSL();
     mesh.color.setHSL(hls.h, hls.s, 1);
 

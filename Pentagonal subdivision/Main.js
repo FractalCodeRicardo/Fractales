@@ -1,4 +1,4 @@
-(function() {
+(function () {
 
 	var initialRadius = 300;
 	var colors = [0xcb42f4, 0xb942f4, 0x8f42f4, 0x7442f4, 0x47269b, 0x3C2182, 0x2F1A66, 0x3C2182, 0x47269b, 0x7442f4, 0x8f42f4, 0xb942f4, 0xcb42f4];
@@ -69,7 +69,7 @@
 			indexParameter++;
 		}
 
-		window.setTimeout(function() {
+		window.setTimeout(function () {
 			requestAnimationFrame(animate);
 			renderer.render(stage);
 		}, 3000);

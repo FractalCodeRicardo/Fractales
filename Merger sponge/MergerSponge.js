@@ -1,4 +1,4 @@
-(function() {
+(function () {
 	var cubeSize = 500;
 
 	var container, stats;

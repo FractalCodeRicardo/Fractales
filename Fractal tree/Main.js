@@ -81,11 +81,11 @@ function RandomParameter(initialPoint, angles) {
 
 	var self = this;
 
-	this.getStrokeWeight = function(currentLevel) {
+	this.getStrokeWeight = function (currentLevel) {
 		return 0.1 + (self.level * self.proportion) - (self.proportion * currentLevel)
 	}
 
-	this.getColor = function(currentLevel) {
+	this.getColor = function (currentLevel) {
 
 		var rp = (self.lastColor.r - self.firstColor.r) / self.level;
 		var gp = (self.lastColor.g - self.firstColor.g) / self.level;
@@ -98,7 +98,7 @@ function RandomParameter(initialPoint, angles) {
 		}
 	}
 
-	this.getLineDistance = function(currentLevel) {
+	this.getLineDistance = function (currentLevel) {
 		return Math.pow(self.proportion, currentLevel - 1) * self.initialDistance;
 	}
 
