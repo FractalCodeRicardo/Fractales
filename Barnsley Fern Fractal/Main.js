@@ -25,13 +25,11 @@ function draw() {
 		stroke(rule.color.r, rule.color.g, rule.color.b);
 		point(p.x, p.y);
 
-
 	}
 
 }
 
 function getRule() {
-
 	var rand = Math.random();
 	for (var i = 0; i < rules.length; i++) {
 		var rule = rules[i];
