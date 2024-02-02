@@ -65,40 +65,40 @@ function Vector(x, y) {
 
 	var self = this;
 
-	this.sum = function(v) {
+	this.sum = function (v) {
 		var x = self.x + v.x;
 		var y = self.y + v.y;
 
 		return new Vector(x, y);
 	}
 
-	this.sumScalar = function(a) {
+	this.sumScalar = function (a) {
 		var x = self.x + a;
 		var y = self.y + a;
 
 		return new Vector(x, y);
 	}
 
-	this.subtract = function(v) {
+	this.subtract = function (v) {
 		var v1 = v.scalarProduct(-1);
 		return self.sum(v1);
 	}
 
-	this.scalarProduct = function(a) {
+	this.scalarProduct = function (a) {
 		var x = self.x * a;
 		var y = self.y * a;
 
 		return new Vector(x, y);
 	}
 
-	this.module = function() {
+	this.module = function () {
 		var x = self.x * self.x;
 		var y = self.y * self.y;
 
 		return Math.sqrt(x + y);
 	}
 
-	this.unitVector = function() {
+	this.unitVector = function () {
 		var m = self.module()
 		var x = self.x / m;
 		var y = self.y / m;
@@ -116,14 +116,14 @@ function Line(p1, p2, level) {
 	var self = this;
 
 
-	this.magnitude = function() {
+	this.magnitude = function () {
 		var x2 = Math.pow(self.p2.x - self.p1.x, 2);
 		var y2 = Math.pow(self.p2.y - self.p1.y, 2);
 		return Math.sqrt(x2 + y2);
 	}
 
 
-	this.center = function() {
+	this.center = function () {
 		var x = (self.p1.x + self.p2.x) / 2;
 		var y = (self.p1.y + self.p2.y) / 2;
 
@@ -177,7 +177,7 @@ function Polygon(center, numberSides, ratio) {
 	this.numberSides = numberSides;
 	this.ratio = ratio;
 
-	this.getLines = function() {
+	this.getLines = function () {
 
 		var angle = Math.PI * 2 / numberSides;
 		var points = [];
