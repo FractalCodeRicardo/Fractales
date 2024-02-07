@@ -4,21 +4,46 @@ const SPEED = 10;
 
 class Simulation {
     constructor() {
-        this.square1 = new Agent()
-        this.square2 = new Agent()
+        this.square1 = new Agent(
+            new Vector((1/4)*SIZE, SIZE/2)
+        )
+        this.square2 = new Agent(
+            new Vector((3/4)*SIZE, SIZE/2)
+        )
 
-        this.wall = this.createWall()
+        this.wall1 = this.createWall1()
+        this.wall2 = this.createWall2()
 
     }
 
-    createWall() {
-        let wall = [];
+    iterateOverScreen(callback) {
         for (let i = 0; i < SIZE; i += SQUARE_SIZE) {
-            wall.push(new Vector(
-                SIZE / 2,
-                i
-            ))
+            for (let j = 0; j < SIZE; j += SQUARE_SIZE) {
+                callback(i, j)
+            }
         }
+    }
+
+    createWall1() {
+        let wall = [];
+        this.iterateOverScreen((i, j) => {
+            if (i < SIZE / 2) {
+                wall.push(new Vector(i, j));
+            }
+        })
+
+
+        return wall
+    }
+
+    createWall2() {
+        let wall = [];
+        this.iterateOverScreen((i, j) => {
+            if (i >= SIZE / 2) {
+                wall.push(new Vector(i, j));
+            }
+        })
+
 
         return wall
     }
@@ -26,8 +51,8 @@ class Simulation {
     iterate() {
         this.detectCollision(this.square1)
         this.detectCollision(this.square2)
-        this.detectCollisionWithWall(this.square1)
-        this.detectCollisionWithWall(this.square2)
+        this.detectCollisionWithWall(this.wall2, this.square1)
+        this.detectCollisionWithWall(this.wall1, this.square2)
         this.square1.move()
         this.square2.move()
     }
@@ -43,39 +68,33 @@ class Simulation {
         }
     }
 
-    detectCollisionWithWall(s) {
+    detectCollisionWithWall(wall, square) {
 
-        for (let i = 0; i < this.wall.length; i++) {
-            const p = this.wall[i];
+        for (let i = 0; i < wall.length; i++) {
+            const p = wall[i];
 
-            if (s.isMovingToRight() && s.crashLeft(p)) {
-                this.moveWall(i, 1)
-                s.changeXDirection()
+            if (square.isMovingToRight() && square.crashLeft(p)) {
+                this.moveWall(wall, i)
+                square.changeXDirection()
+                continue
             }
 
-            if (s.isMovingToLeft() && s.crashRight(p)) {
-                this.moveWall(i, -1)
-                s.changeXDirection()
+            if (square.isMovingToLeft() && square.crashRight(p)) {
+                this.moveWall(wall, i)
+                square.changeXDirection()
+                continue
             }
-            
         }
-
-
     }
 
-    moveWall(index, x) {
-        let item = this.wall[index]
-        this.wall[index] = new Vector(item.x + (x * SQUARE_SIZE), item.y)
+    moveWall(wall, index) {
+        wall.splice(index, 1)
     }
-
-
 }
+
 class Agent {
-    constructor() {
-        this.position = new Vector(
-            Math.random() * SIZE,
-            Math.random() * SIZE
-        )
+    constructor(position) {
+        this.position = position
 
 
         this.direction = new Vector(
@@ -158,10 +177,6 @@ class Agent {
             (bottomWall >= bottomAgent && bottomAgent >= topWall)
     }
 
-    chashRight() {
-
-    }
-
 }
 
 class Vector {
@@ -198,17 +213,22 @@ function draw() {
 }
 
 function drawSimulation() {
-    drawSquare(simulation.square1.position)
-    drawSquare(simulation.square2.position)
-    drawWall(simulation.wall)
+
+    drawWall(simulation.wall1, color(193, 0, 196))
+    drawWall(simulation.wall2, color(18, 199, 27))
+
+    drawSquare(simulation.square1.position, color(193, 0, 196))
+    drawSquare(simulation.square2.position, color(18, 199, 27))
 }
 
-function drawSquare(s) {
+function drawSquare(s, c) {
+    fill(c)
     square(s.x, s.y, SQUARE_SIZE)
 }
 
-function drawWall(wall) {
+function drawWall(wall, color) {
     wall.forEach(i => {
+        fill(color)
         square(i.x, i.y, SQUARE_SIZE)
     })
 }
