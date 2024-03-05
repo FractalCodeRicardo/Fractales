@@ -68,7 +68,6 @@ function isMandelbrot(x, y) {
         i++;
     }
 
-
     return true;
 
 }
