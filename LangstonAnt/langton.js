@@ -41,8 +41,6 @@ class Ant {
         this.direction.y = ny;
     }
 
-
-
     turnRight() {
         let nx = this.direction.y;
         let ny = this.direction.x * -1;
@@ -104,15 +102,12 @@ function setup() {
     frameRate(1000);
 }
 
-
-
 function draw() {
 
     drawSquares();
     ant.move();
 
 }
-
 
 
 let initialDraw = true;
@@ -145,7 +140,6 @@ function drawSquares() {
 }
 
 
-
 function createSquares() {
 
     let squares = [];
@@ -157,12 +151,6 @@ function createSquares() {
     return squares;
 
 }
-
-
-
-
-
-
 
 function searchSquare(x, y) {
     let xLength = Math.floor(window.innerWidth / SIZE)
