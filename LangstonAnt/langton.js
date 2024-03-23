@@ -28,7 +28,6 @@ class Ant {
     currentSquare = {};
     direction = { x: 0, y: 1 }
 
-
     constructor(currentSquare) {
         this.currentSquare = currentSquare;
     }
@@ -81,8 +80,6 @@ class Ant {
     }
 
 }
-
-
 
 
 let STATE_BLACK = 1;
