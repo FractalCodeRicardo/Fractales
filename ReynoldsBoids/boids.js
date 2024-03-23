@@ -1,12 +1,12 @@
 
 let boids = [];
-let N = 500;
+let N = 200;
 let distanceFlock = 0.3;
-let maxSpeed = 2;
+let maxSpeed = 3;
 let cohesion = 100;
 let matchVelocityParam = 100
-let colors = ["red", "green", "purple"]
-
+let colors = ["cyan","pink", "magenta", "purple"]
+let weight = 10;
 class Vector {
 
     constructor(x, y) {
@@ -96,10 +96,10 @@ function createBoids() {
 
 
 function setup() {
-    createBoids();
+  createBoids();
 	createCanvas(window.innerWidth, window.innerHeight);
 	stroke(255);     // Set line drawing color to white
-    strokeWeight(3)
+  strokeWeight(weight)
 	background(0);
 }
 
