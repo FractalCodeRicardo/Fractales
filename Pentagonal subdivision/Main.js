@@ -2,8 +2,9 @@
 
 	var initialRadius = 300;
 	var colors = [0xcb42f4, 0xb942f4, 0x8f42f4, 0x7442f4, 0x47269b, 0x3C2182, 0x2F1A66, 0x3C2182, 0x47269b, 0x7442f4, 0x8f42f4, 0xb942f4, 0xcb42f4];
+//	var colors = [0x00FF00, 0xFF00FF,0x0000FF] 
 	var styleLevels = createStyles();
-
+  var delay = 200;
 	var renderer;
 	var graphics
 	var stage;
@@ -17,7 +18,7 @@
 	timer.start();
 
 	function init() {
-		renderer = PIXI.autoDetectRenderer(window.innerWidth - 30, window.innerHeight - 30);
+		renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
 		document.body.appendChild(renderer.view);
 		stage = new PIXI.Container();
 		graphics = new PIXI.Graphics();
@@ -36,7 +37,7 @@
 
 		return styles;
 	}
-
+  
 	function createParametersSet() {
 		var parameters = [];
 		for (var prop = 0.1; prop <= 0.9; prop = prop + 0.1) {
@@ -72,7 +73,7 @@
 		window.setTimeout(function () {
 			requestAnimationFrame(animate);
 			renderer.render(stage);
-		}, 3000);
+		}, delay);
 
 	}
 
