@@ -1,4 +1,4 @@
-
+var globalColor = 'gray';
 var rules = createRules();
 var x = window.innerWidth / 2;
 var y = window.innerHeight / 2;
@@ -22,7 +22,7 @@ function draw() {
 
 		var p = toScreenCoordinates({ x: x, y: y });
 
-		stroke(rule.color.r, rule.color.g, rule.color.b);
+		stroke(globalColor);
 		point(p.x, p.y);
 
 	}
