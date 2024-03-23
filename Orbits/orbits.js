@@ -48,9 +48,11 @@ class Orbit {
 }
 
 var center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-var numberOrbits = 100;
-var angleIncrement = 0.05;
-var sizePlanet = 5;
+var numberOrbits = 200;
+var angleIncrement = 0.001;
+var sizePlanet = 10;
+var color1 = 'cyan';
+var color2 = 'yellow';
 var orbits = createOrbits();
 
 function createOrbits() {
@@ -58,22 +60,22 @@ function createOrbits() {
     var distanceX = 100;
     var distanceY = 200;
     var orbits = [];
-    var angleIncrement = 0.05;
+    var angle = 0;
     for (let i = 0; i < numberOrbits; i++) {
 
         let orbit1 = new Orbit(center, distanceX, distanceY);
-        orbit1.angleIncrement = angleIncrement;
-        orbit1.color = { r: 50, g: 168, b: 82 }
+        orbit1.angleIncrement = angle;
+        orbit1.color = color1;
         orbits.push(orbit1);
 
         let orbit2 = new Orbit(center, distanceY, distanceX);
-        orbit2.angleIncrement = angleIncrement;
-        orbit2.color = { r: 168, g: 50, b: 103 }
+        orbit2.angleIncrement = angle;
+        orbit2.color = color2;
         orbits.push(orbit2);
 
         distanceX += 1;
         distanceY += 1;
-        angleIncrement += - 0.001;
+        angle += - angleIncrement;
     }
 
     return orbits;
@@ -102,8 +104,8 @@ function drawOrbits() {
 
         let x = orbit.getX();
         let y = orbit.getY();
-        fill(orbit.color.r, orbit.color.g, orbit.color.b);
-        stroke(orbit.color.r, orbit.color.g, orbit.color.b);
+        fill(orbit.color);
+        stroke(orbit.color);
         circle(x, y, sizePlanet);
     }
 }
