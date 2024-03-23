@@ -95,6 +95,10 @@ let squares = createSquares();
 let squareCenter = searchSquare(Math.floor(window.innerWidth / SIZE / 2), Math.floor(window.innerHeight / SIZE / 2));
 let ant = new Ant(squareCenter);
 
+let squareColor = 'black';
+let black = 'magenta';
+let white = 'cyan';
+
 function setup() {
     createCanvas(window.innerWidth, window.innerHeight);
     stroke(100);     // Set line drawing color to white
@@ -108,14 +112,12 @@ function draw() {
     ant.move();
 
 }
-
-
 let initialDraw = true;
 function drawSquares() {
 
     if (initialDraw) {
         squares.forEach(s => {
-            fill(155);
+            fill(squareColor);
             square(s.x * SIZE, s.y * SIZE, SIZE);
         })
 
@@ -129,9 +131,9 @@ function drawSquares() {
         if (s.state != STATE_INITIAL) {
 
             if (s.state == STATE_BLACK)
-                fill(0)
+                fill(black)
             else
-                fill(255);
+                fill(white);
 
             square(s.x * SIZE, s.y * SIZE, SIZE);
 
