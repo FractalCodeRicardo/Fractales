@@ -1,10 +1,15 @@
 let board = [[]];
-let boardSize = 50;
-let boxSize = 5;
-let cameraPosition = { x: 0, y: 300, z: 100 };
+let boardSize = 10;
+let boxSize = 20;
+let cameraPosition = {
+  x: 0,
+  y: 0,
+  z: 600,
+};
+let material = () => normalMaterial();
 let framerate = 20;
 let currentFrame = 0;
-let initialAlives = 100;
+let initialAlives = 60;
 function setup() {
   initBoard();
   createCanvas(this.windowWidth, this.windowHeight, WEBGL);
@@ -19,14 +24,15 @@ function setup() {
     1,
     0,
   );
+
   describe("a white box rotating in 3D space");
 }
 
 function draw() {
-  background(200);
-  //  rotateX(frameCount * 0.01);
-  // rotateY(frameCount * 0.01);
-
+  background(0);
+  rotateZ(frameCount * 0.01);
+  rotateY(frameCount * 0.01);
+  rotateX(frameCount * 0.01);
   currentFrame++;
 
   if (currentFrame == framerate) {
@@ -58,7 +64,10 @@ function drawBox(x, y) {
   push();
   y = y * boxSize + boxSize / 2;
   x = x * boxSize + boxSize / 2;
+  y = y - (boardSize * boxSize) / 2;
+  x = x - (boardSize * boxSize) / 2;
   translate(x, y, 0);
+  material();
   box(boxSize - 1);
   pop();
 }
@@ -72,21 +81,17 @@ function initBoard() {
 
     var j = 0;
     while (j < boardSize) {
-      var r = Math.random();
-      var one = r > 0.5 ? 1 : 0;
-
-      if (countAlives == initialAlives) {
-        one = 0;
-      }
-
-      if (one == 1) {
-        countAlives++;
-      }
-
-      board[i].push(one);
+      board[i].push(0);
       j++;
     }
     i++;
+  }
+
+  for (let i = 0; i < initialAlives; i++) {
+    let i = Math.random() * boardSize;
+    let j = Math.random() * boardSize;
+
+    board[Math.floor(i)][Math.floor(j)] = 1;
   }
 }
 
