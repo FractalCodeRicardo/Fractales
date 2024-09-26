@@ -1,11 +1,27 @@
 
 function loadFractals() {
-    createView("3dgameoflife", "Game of Life", "./3DGameOfLife/index.html", "./3DGameOfLife/gameOfLife.js");
-    createView("carrito", "Carrito", "./Carrito/index.html", "Carrito/Main.js"); 
-    createView("sierpinski", "Sierpinski", "./Sierpinski/index.html", "./Sierpinski/Sierpinski.js");
+    loadFractal("3dgameoflife", "Game of Life", "3DGameOfLife");
+    loadFractal("carrito", "Carrito", "Carrito");
+    loadFractal("sierpinski", "Sierpinski", "Sierpinski");
 
-    createView("asccimaldelbrot", "Ascii Maldelbrot", "./AscciMandelbrot/index.html", "./AscciMandelbrot/index.js");
-    createView("barsleyfractal", "Barnsley Fern Fractal", "./Barnsley Fern Fractal/index.html", "./Barnsley Fern Fractal/Main.js");
+    loadFractal("asccimaldelbrot", "Ascii Maldelbrot", "AscciMandelbrot");
+    loadFractal("barsleyfractal", "Barnsley Fern Fractal", "Barnsley Fern Fractal");
+    loadFractal("cellularAutomata", "Cellular Automata", "CellularAutomata");
+
+    loadFractal("cesaroFractal", "Cesaro Fractal", "Cesaro Fractal");
+    loadFractal("fractalTree", "Fractal Tree", "Fractal tree");
+    loadFractal("LangstonAnt", "Langston Ant", "LangstonAnt");
+
+    loadFractal("mathrose", "Math Rose", "Math Rose");
+}
+
+function loadFractal(id, name, carpet) {
+    createView(
+        id, 
+        name,
+        `./${carpet}/index.html`, 
+        `./${carpet}/index.js`,
+    );
 }
 
 function createView(id, name, htmlFile, jsFile) {
@@ -41,3 +57,6 @@ function loadCode(id, jsFile){
     })
     .catch(error => console.error('Error loading JS file:', error));
 }
+
+loadFractals();
+
