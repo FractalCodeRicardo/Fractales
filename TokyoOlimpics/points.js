@@ -4,7 +4,7 @@ class Points {
         let theta = 0;
         let phi = 0;
         let step = 0.1;
-        let r = 150;
+        let r = 200;
         let points = [];
 
         while (theta <= Math.PI) {

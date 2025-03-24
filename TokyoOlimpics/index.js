@@ -196,7 +196,7 @@ function addDrones() {
 
     for (const key in drones) {
         let drone = drones[key];
-        let cube = createCube(drone.id, drone.position, 5);
+        let cube = createCube(drone.id, drone.position, 10);
         scene.add(cube);
     }
 }
