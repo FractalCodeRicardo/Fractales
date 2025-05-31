@@ -1,23 +1,21 @@
-const size = 2;
+const size = 10;
 const step = 0.1;
 const maxIterations = 100;
+const screenSize = 15000;
 
 function setup() {
 
-    createCanvas(screenSize(), screenSize());
+    createCanvas(screenSize, screenSize);
 }
 
 function draw() {
     textSize(20)
-    stroke("cyan")
+    stroke("yellow")
     background(0);
     var points = getPoints();
     drawPoints(points)
 }
 
-function screenSize() {
-    return Math.min(windowWidth, windowHeight)
-}
 
 function drawPoints(points) {
     for (var p of points) {
@@ -26,13 +24,27 @@ function drawPoints(points) {
 }
 
 function drawPoint(p) {
-    let sSize = screenSize();
+    let sSize = screenSize;
     let scale = sSize / size;
     let cx = sSize / 2;
     let cy = sSize / 2;
     let x = p.x * scale + cx;
     let y = cy - p.y * scale;
-    text("( ͡° ͜ʖ ͡°)", x, y);
+    text(`⣿⡟⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠉⣿⣿⣿
+        ⡟⠄⠄⠄⠄⠄⠄⠄⠄⠄⢀⣠⣰⣶⣽⣽⣷⣶⣀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⣿⣿⣿
+        ⠁⠄⠄⠄⠄⠄⡀⢀⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣯⣆⡀⠄⠄⠄⠄⠄⣀⠄⠄⣿⣿⣿
+        ⠄⠄⠄⠄⣤⣾⠟⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣿⣷⣶⣾⣿⠄⢀⣿⣿⣿
+        ⠄⠄⠄⠈⠉⠰⣷⣿⣿⣿⣿⣿⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⠿⢿⢿⡿⣿⣿⠄⢸⣷⣿⣿
+        ⠄⠄⠄⠄⢀⣼⣿⣻⣿⡿⠿⠿⠆⠄⠄⠄⠈⢙⣿⡇⠉⠄⠄⠄⠄⣰⣞⡏⠄⢸⡿⣿⣿
+        ⢀⠄⠄⢀⢸⢿⣿⣟⣷⣦⣶⣶⣶⣶⣶⣷⣐⣼⣿⣷⠄⣠⣴⣤⣤⣄⢉⡄⠄⠸⠇⣿⣿
+        ⣶⣇⣤⡎⠘⠁⠐⣿⣿⣿⣿⣿⣿⣿⣿⣿⣟⣿⣿⣿⣾⣿⣿⣿⣾⣿⣿⡇⡶⣥⣴⣿⣿
+        ⢣⣛⡍⠸⠄⠄⠄⠈⢻⣿⣿⣿⣿⣿⣿⠏⢈⣿⣿⣿⡇⢿⣿⣿⣿⣿⡿⠃⠄⢜⣿⣿⣿
+        ⠃⠋⠼⠥⠄⢠⠄⠐⣠⣿⣿⣿⣿⡿⢁⠈⠉⠛⠛⠛⠋⠈⠟⣿⣿⡏⠄⢸⢸⣽⣿⣿⣿
+        ⠄⠄⠄⠄⠄⠈⠄⠠⢿⣿⣿⣿⣿⣿⣿⣿⣾⣦⣤⣀⣤⣤⡀⢨⠿⣇⠄⣿⣻⣿⣿⣿⣿
+        ⠄⣾⣾⡇⡀⠄⠄⢀⢢⣽⣿⣿⡿⠿⠻⠿⠛⠛⠿⠛⠻⠜⡽⣸⣿⣿⠿⢿⣿⣿⣿⣿⣿
+        ⣷⠎⢡⡭⠂⠄⠄⠄⠄⠺⣿⣿⣷⣾⢿⠙⠛⠛⠛⠛⠛⠳⢶⣿⣿⡿⢋⣿⣿⣿⣿⣿⣿
+        ⠁⠄⢸⣿⡄⡀⠄⠄⠄⠈⠙⠽⣿⣷⣷⣶⣿⣿⣿⣶⣤⣠⣬⣏⠉⠁⣾⣿⣿⣿⣿⣿⣿
+        ⠄⠄⢸⣿⣿⣦⡀⠄⠄⠄⠄⠄⠈⠛⠛⡟⠿⡿⢻⠛⠟⠿⠋⠁`, x, y);
 }
 
 function getPoints() {
